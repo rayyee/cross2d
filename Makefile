@@ -7,7 +7,8 @@ TARGET = cross2d.exe
 LDFLAGS = -lgdi32 -lglew32 -lopengl32
 
 SRC = \
-src/Sprite.c 
+src/Sprite.c \
+src/ShaderLoader.c
 
 TEST_SRC = \
 test/Main.c
