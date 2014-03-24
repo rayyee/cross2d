@@ -74,7 +74,7 @@ update_frame(HDC hDC) {
 	SwapBuffers(hDC);
 	
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "simple.vs", "simple.fs" );
+	GLuint programID = LoadFragmentShader( "simple.fs" );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(programID);
 
