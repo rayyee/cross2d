@@ -9,7 +9,7 @@ static const GLfloat g_vertex_buffer_data[] = {
 };
 
 void
-Triangle_createVertex(char index)
+Triangle_createVertex()
 {
     //print("triangle create");
     //生成1个名称给vertexbuffer缓冲区对象
