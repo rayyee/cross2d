@@ -5,21 +5,32 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 
+#include "Triangle.h"
+
 #define CLASSNAME L"CROSS2D"
 #define WINDOWNAME L"CROSS2D"
 #define WINDOWSTYLE (WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX)
 
-#define WIDTH 1024
-#define HEIGHT 768
+#define WIDTH 760
+#define HEIGHT 650
 
-GLuint vertexbuffer;
+/*GLuint vertexbuffer;*/
 
-struct Vector3
+typedef struct Geometry
+{
+    void (*createVertex)();
+    void (*createConfigure)(char);
+} Geometry;
+
+Geometry geometries[2];
+Geometry triangle;
+
+/*struct Vector3
 {
 	float x;
 	float y;
 	float z;
-};
+};*/
 
 static void
 set_pixel_format_to_hdc(HDC hDC)
@@ -75,11 +86,15 @@ update_frame(HDC hDC) {
 	
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadFragmentShader( "simple.fs" );
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glUseProgram(programID);
 
+	triangle.createConfigure(0);
+//	Triangle_createConfigure(0);
 	
-	// 1rst attribute buffer : vertices
+	/*// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
@@ -89,7 +104,7 @@ update_frame(HDC hDC) {
 	   GL_FALSE,           // normalized?
 	   0,                  // stride
 	   (void*)0            // array buffer offset
-	);
+	);*/
 
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
@@ -191,11 +206,7 @@ create_window(int w, int h)
 	return wnd;
 }
 
-static const GLfloat g_vertex_buffer_data[] = {
-   -1.0f, -1.0f, 0.0f,
-   1.0f, -1.0f, 0.0f,
-   0.0f, 1.0f, 0.0f,
-};
+
 
 int main(int argc ,char* argv[])
 {
@@ -203,12 +214,10 @@ int main(int argc ,char* argv[])
 	HWND wnd = create_window(WIDTH, HEIGHT);
 	ShowWindow(wnd, SW_SHOWDEFAULT);
 	UpdateWindow(wnd);
-	
-	
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-	
+
+	triangle.createVertex = Triangle_createVertex;
+	triangle.createConfigure = Triangle_createConfigure;
+	triangle.createVertex();
 	
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)) 
